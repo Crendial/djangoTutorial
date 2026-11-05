@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fi">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Polling app</title>
+        <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+    </head>
+    <div class="container">
+        {% if latest_question_list %}
+            {% for question in latest_question_list %}
+                <div class="pollBox">
+                    <a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No polls are available.</p>
+        {% endif %}
+    </div>
+</html>

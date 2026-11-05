@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fi">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Poll results</title>
+        <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+    </head>
+    <div class="resultContainer">
+        <h1>{{ question.question_text }}</h1>
+        <canvas id="myChart" style="max-width: 400px; margin: 0 auto;"></canvas>
+        <a id="backToPolls" href="{% url 'polls:index' %}">Back to looking at polls?</a>
+    </div>
+
+    {{ choices|json_script:"choices-data" }}
+    {{ votes|json_script:"votes-data" }}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script>
+    const labels = JSON.parse(document.getElementById('choices-data').textContent);
+    const votes = JSON.parse(document.getElementById('votes-data').textContent);
+
+    new Chart(document.getElementById('myChart'), {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '# of votes',
+          data: votes,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+                labels: { color: 'white' }
+            },
+            title: { display: false }
+        }
+      }
+    });
+  </script>
+</html>
