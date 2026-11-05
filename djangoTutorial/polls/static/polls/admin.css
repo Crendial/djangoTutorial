@@ -1,0 +1,26 @@
+.inline-group .inline-related,
+.inline-group .inline-related fieldset {
+    background: var(--body-bg);
+    color: var(--body-fg);
+}
+
+.inline-related h3 {
+    background: var(--darkened-bg);
+    color: var(--body-quiet-color);
+}
+
+.inline-group h2 {
+    background: var(--primary);
+    color: var(--primary-fg);
+}
+
+.inline-group label,
+.inline-group .form-row label {
+    color: var(--body-fg);
+}
+
+.inline-group .add-row,
+.inline-group .add-row a {
+    background: var(--darkened-bg);
+    color: var(--link-fg);
+}

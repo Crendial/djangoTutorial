@@ -9,47 +9,47 @@ from django.views import generic
 from django.utils import timezone
 from django.contrib import messages
 
-from .models import Question, Choice, Vote
+from .models import Poll, Question, Choice, Vote
 
 class IndexView(generic.ListView):
     template_name = "polls/index.html"
-    context_object_name = "latest_question_list"
+    context_object_name = "latest_poll_list"
 
     def get_queryset(self):
         """
-        Return the last five published questions (not including those set to be published in the future)
+        Return the last five published polls (not including those set to be published in the future)
         """
-        return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
+        return Poll.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
 
 class DetailView(generic.DetailView):
-    model = Question
+    model = Poll
     template_name = "polls/detail.html"
 
     def get(self, request, *args, **kwargs):
-        question = self.get_object()
+        poll = self.get_object()
         try:
             voter_id = uuid.UUID(request.get_signed_cookie("voter_id", default=""))
         except ValueError:
             voter_id = None
-        if voter_id and Vote.objects.filter(question=question, voter_id=voter_id).exists():
-            return redirect("polls:results", question.id)
+        if voter_id and Vote.objects.filter(poll=poll, voter_id=voter_id).exists():
+            return redirect("polls:results", poll.id)
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         """
-        Excludes questions not published yet
+        Excludes polls not published yet
         """
-        return Question.objects.filter(pub_date__lte=timezone.now())
+        return Poll.objects.filter(pub_date__lte=timezone.now())
 
 class ResultsView(generic.DetailView):
-    model = Question
+    model = Poll
     template_name = "polls/results.html"
 
     def get_queryset(self):
         """
-        Excludes questions not published yet (mentioned in the tutorial with no example, doing it here cus I probably should.)
+        Excludes polls not published yet (mentioned in the tutorial with no example, doing it here cus I probably should.)
         """
-        return Question.objects.filter(pub_date__lte=timezone.now())
+        return Poll.objects.filter(pub_date__lte=timezone.now())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -58,9 +58,8 @@ class ResultsView(generic.DetailView):
         context["votes"] = [c.votes for c in choices]
         return context
 
-def vote(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    choice = get_object_or_404(Choice, pk=request.POST.get("choice"), question=question)
+def vote(request, poll_id):
+    poll = get_object_or_404(Poll, pk=poll.id)
 
     try:
         voter_id = uuid.UUID(request.get_signed_cookie("voter_id", default=""))
@@ -70,12 +69,12 @@ def vote(request, question_id):
 
     try:
         with transaction.atomic():
-            Vote.objects.create(question=question, choice=choice, voter_id=voter_id)
+            Vote.objects.create(poll=poll, voter_id=voter_id)
     except IntegrityError:
         messages.info(request, "Yo've already voted on this poll.")
-        return redirect("polls:results", question_id)
+        return redirect("polls:results", poll_id)
 
-    response = redirect("polls:results", question.id)
+    response = redirect("polls:results", poll.id)
     if new_cookie:
         response.set_signed_cookie("voter_id", str(voter_id),
                                    max_age=60*60*24*365*2, httponly=True, samesite="Lax")
