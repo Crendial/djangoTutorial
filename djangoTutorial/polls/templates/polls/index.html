@@ -8,10 +8,10 @@
         <link rel="stylesheet" href="{% static 'polls/style.css' %}">
     </head>
     <div class="container">
-        {% if latest_question_list %}
-            {% for question in latest_question_list %}
+        {% if latest_poll_list %}
+            {% for poll in latest_poll_list %}
                 <div class="pollBox">
-                    <a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
+                    <a href="{% url 'polls:detail' poll.id %}">{{ poll.poll_text }}</a>
                 </div>
             {% endfor %}
         {% else %}

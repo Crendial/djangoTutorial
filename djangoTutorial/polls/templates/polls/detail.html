@@ -7,14 +7,15 @@
         <title>Poll details</title>
         <link rel="stylesheet" href="{% static 'polls/style.css' %}">
     </head>
-    <form action="{% url 'polls:vote' question.id %}" method="post">
+    <form action="{% url 'polls:vote' poll.id %}" method="post">
     {% csrf_token %}
     <div class="container">
         <fieldset>
-            <legend><h1>{{ question.question_text }}</h1></legend>
+            <legend><h1>{{ poll.poll_text }}</h1></legend>
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-            {% for choice in question.choice_set.all %}
+            {% for question in poll.question_set.all %}
                 <div class="pollBox">
+                    <h1>
                     <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" class="voteChoice">
                     <label for="choice{{ forloop.counter }}" class="voteChoice-label">{{ choice.choice_text }}</label><br>
                 </div>
@@ -23,4 +24,4 @@
         <input type="submit" value="Vote" id="voteBtn">
     </div>
     </form>
-</html>
+</html>  
