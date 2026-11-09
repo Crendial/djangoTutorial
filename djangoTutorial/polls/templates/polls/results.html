@@ -8,39 +8,40 @@
         <link rel="stylesheet" href="{% static 'polls/style.css' %}">
     </head>
     <div class="resultContainer">
-        <h1>{{ question.question_text }}</h1>
-        <canvas id="myChart" style="max-width: 400px; margin: 0 auto;"></canvas>
-        <a id="backToPolls" href="{% url 'polls:index' %}">Back to looking at polls?</a>
+      <h1>{{ poll.poll_text }}</h1>
+      {% for chart in charts %}
+        <h2>{{ chart.question }}</h2>
+        <canvas id="myChart{{ forloop.counter0 }}" style="max-width: 400px; margin: 0 auto;"></canvas>
+      {% endfor %}
+      <a id="backToPolls" href="{% url 'polls:index' %}">Back to looking at polls?</a>
     </div>
 
-    {{ choices|json_script:"choices-data" }}
-    {{ votes|json_script:"votes-data" }}
-
+    {{ charts|json_script:"charts-data" }}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <script>
-    const labels = JSON.parse(document.getElementById('choices-data').textContent);
-    const votes = JSON.parse(document.getElementById('votes-data').textContent);
-
-    new Chart(document.getElementById('myChart'), {
-      type: 'pie',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: '# of votes',
-          data: votes,
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
+    <script>
+    const charts = JSON.parse(document.getElementById("charts-data").textContent);
+    charts.forEach((c, i) => {
+      new Chart(document.getElementById(`myChart${i}`), {
+        type: 'pie',
+        data: {
+          labels: c.labels,
+          datasets: [{
+            label: '# of votes',
+            data: c.votes,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
             legend: {
-                position: 'top',
-                labels: { color: 'white' }
+              position: 'top',
+              labels: { color: 'white' }
             },
             title: { display: false }
+          }
         }
-      }
+      });
     });
-  </script>
+    </script>
 </html>

@@ -8,11 +8,13 @@ from nested_admin import NestedTabularInline, NestedModelAdmin
 # Register your models here.
 from .models import Poll, Question, Choice
 
+
 class ChoiceInline(NestedTabularInline):
     model = Choice
     extra = 2
     min_num = 2
     validate_min = True
+
 
 class QuestionInline(NestedTabularInline):
     model = Question
@@ -22,14 +24,13 @@ class QuestionInline(NestedTabularInline):
     inlines = [ChoiceInline]
 
 
-
 class PollAdmin(NestedModelAdmin):
     class Media:
         css = {"all": ("polls/admin_fix.css",)}
-    
+
     fieldsets = [
         (None, {"fields": ["poll_text"]}),
-        ("Date information", {"fields": ["pub_date"], "classes": ["collapse"]})
+        ("Date information", {"fields": ["pub_date"], "classes": ["collapse"]}),
     ]
     inlines = [QuestionInline]
 
@@ -64,4 +65,6 @@ class PollAdmin(NestedModelAdmin):
             request, "admin/polls/poll/qr.html", {"poll": poll, "url": url}
         )
 
+
 admin.site.register(Poll, PollAdmin)
+

@@ -1,1 +1,2 @@
-# djangoTutorial Learning django slaps dude
+# djangoTutorial 
+Learning django slaps dude

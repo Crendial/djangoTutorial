@@ -12,12 +12,18 @@
     <div class="container">
         <fieldset>
             <legend><h1>{{ poll.poll_text }}</h1></legend>
-            {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+           {% if messages %}
+              <ul class="messages">
+              {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+              </ul>
+           {% endif %}
             {% for question in poll.question_set.all %}
                 <div class="pollBox">
-                    <h1>
-                    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" class="voteChoice">
-                    <label for="choice{{ forloop.counter }}" class="voteChoice-label">{{ choice.choice_text }}</label><br>
+                  <h1>{{ question.question_text }}</h1>
+                  {% for choice in question.choice_set.all %}
+                    <input type="radio" name="choice{{question.id}}" id="choice-{{question.id}}-{{choice.id}}" value="{{ choice.id }}" class="voteChoice" required>
+                    <label for="choice{{question.id}}{{choice.id}}" class="voteChoice-label">{{ choice.choice_text }}</label><br>
+                  {% endfor %}
                 </div>
             {% endfor %}
         </fieldset>
