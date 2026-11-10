@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fi">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Exam results</title>
+        <link rel="stylesheet" href="{% static 'exams/style.css' %}">
+    </head>
+    <div class="resultContainer">
+      <h1>{{ exam.exam_text }}</h1>
+      {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% if attempt %}
+        <h2>{{ request.student.name }}, you scored {{ attempt.score }}/{{ attempt.total }}</h2>
+        {% for mchoice in exam.multiplechoice_set.all %}
+          <h2 class="chartTxt">{{ mchoice.mchoice_text }}</h2>
+          <canvas id="myChart{{ forloop.counter0 }}" style="max-width: 400px; margin: 0 auto;"></canvas>  
+        {% endfor %}
+      {% endif %}
+
+      <a id="backToPolls" href="{% url 'exams:index' %}">Back to looking at exams?</a>
+    </div>
+
+    {{ charts|json_script:"charts-data" }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    const charts = JSON.parse(document.getElementById("charts-data").textContent);
+    charts.forEach((c, i) => {
+      new Chart(document.getElementById(`myChart${i}`), {
+        type: 'pie',
+        data: {
+          labels: c.labels,
+          datasets: [{
+            label: '# of votes',
+            data: c.votes,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: { color: 'white' }
+            },
+            title: { display: false }
+          }
+        }
+      });
+    });
+    </script>
+</html>

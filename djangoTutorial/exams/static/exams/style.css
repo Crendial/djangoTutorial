@@ -1,0 +1,151 @@
+body {
+    width: 100%;
+    background-color: rgb(39, 39, 41)
+}
+
+h1, legend {
+    color: white;
+    font-size: xx-large;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0 auto;
+}
+
+h2 {
+  color: white;
+  font-size: x-large;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0 auto;
+}
+
+li {
+    list-style-type: none;
+}
+
+li, a, #backToPolls, p {
+    color: white;
+    font-size: large;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0 auto;
+    font-size: x-large;
+}
+
+#backToPolls {
+    margin-top: 0.5rem;
+}
+
+fieldset {
+    width: 90%;
+    margin: 2vw;
+    margin-bottom: 1vw;
+}
+
+#voteBtn {
+    margin-left: 2.5vw;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 80%;
+    height: 2rem;
+    font-size: 1rem;
+    border-radius: 5%;
+    border: solid black 1px
+}
+
+.container {
+    border: black;
+    background-color: rgb(61, 61, 61);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin: 3vw auto;
+    padding: 1vw;
+    width: 80%;
+}
+
+.resultContainer {
+    border: black;
+    background-color: rgb(61, 61, 61);
+    display: flex;
+    flex-direction: column;
+    margin: 3vw auto;
+    padding: 1vw;
+    width: 80%;
+}
+
+.pollBox {
+    border: solid black;
+    background-color: rgb(80, 79, 79);
+    flex: 1 0 30%;
+    padding: 1vw;
+    margin: 1vw;
+    border-radius: 3%;
+    text-align: center;
+}
+
+.voteChoice {
+    margin: 0.5rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    input[type=radio] {
+        position: absolute;
+        opacity: 0;
+    + .voteChoice-label {
+        &:before {
+            content: '';
+            background: #f4f4f4;
+            border-radius: 100%;
+            border: 1px solid #616161;
+            display: inline-block;
+            width: 1.4rem;
+            height: 1.4rem;
+            position: relative;
+            top: -0.2rem;
+            margin-right: 1rem;
+            vertical-align: top;
+            cursor: pointer;
+            text-align: center;
+            transition: all 250ms ease;
+        }
+    }
+    &:checked {
+        + .voteChoice-label {
+            &:before {
+                background-color: #3197EE;
+                box-shadow: inset 0 0 0 4px #f4f4f4;
+            }
+        }
+    }
+    &:focus {
+        + .voteChoice-label {
+            &:before {
+                outline: none;
+                border-color: #3197EE;
+            }
+        }
+    }
+    &:disabled {
+        + .voteChoice-label {
+            &:before {
+                box-shadow: inset 0 0 0 4px #f4f4f4;
+                border-color: #616161;
+                background: #616161;
+            }
+        }
+    }
+    + .voteChoice-label {
+        &:empty {
+            &:before {
+                margin-right: 0;
+            }
+        }
+    }
+    }
+}
+
+.voteChoice-label {
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.chartTxt {
+  margin-top: 1rem;
+}

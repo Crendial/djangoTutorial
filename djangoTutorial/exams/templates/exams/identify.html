@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Exam details</title>
+    <link rel="stylesheet" href="{% static 'exams/style.css' %}">
+  </head>
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    {{ form.as_p }}
+    <button type="submit">Continue</button>
+  </form>
+</html>

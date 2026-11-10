@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fi">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Exam details</title>
+        <link rel="stylesheet" href="{% static 'exams/style.css' %}">
+    </head>
+    <form action="{% url 'exams:vote' exam.id %}" method="post">
+    {% csrf_token %}
+    <div class="container">
+        <fieldset>
+            <legend><h1>{{ exam.exam_text }}</h1></legend>
+           {% if messages %}
+              <ul class="messages">
+              {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+              </ul>
+           {% endif %}
+            {% for mchoice in exam.multiplechoice_set.all %}
+                <div class="pollBox">
+                  <h1>{{ mchoice.mchoice_text }}</h1>
+                  {% for choice in mchoice.choice_set.all %}
+                    <input type="radio" name="choice{{mchoice.id}}" id="choice-{{mchoice.id}}-{{choice.id}}" value="{{ choice.id }}" class="voteChoice" required>
+                    <label for="choice-{{mchoice.id}}-{{choice.id}}" class="voteChoice-label">{{ choice.choice_text }}</label><br>
+                  {% endfor %}
+                </div>
+            {% endfor %}
+        </fieldset>
+        <input type="submit" value="Vote" id="voteBtn">
+    </div>
+    </form>
+</html>  

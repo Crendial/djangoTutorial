@@ -2,15 +2,13 @@ import uuid
 
 from django.db import IntegrityError, transaction
 from django.db.models import F
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 from django.contrib import messages
 
-from .models import Poll, Question, Choice, Vote
+from .models import Poll, Choice, Vote
 
 
 class IndexView(generic.ListView):

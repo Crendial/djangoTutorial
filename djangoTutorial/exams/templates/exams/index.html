@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fi">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Exam app</title>
+        <link rel="stylesheet" href="{% static 'exams/style.css' %}">
+    </head>
+    <div class="container">
+        {% if latest_exam_list %}
+            {% for exam in latest_exam_list %}
+                <div class="pollBox">
+                    <a href="{% url 'exams:detail' exam.id %}">{{ exam.exam_text }}</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No polls are available.</p>
+        {% endif %}
+    </div>
+</html>
