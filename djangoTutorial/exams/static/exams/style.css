@@ -149,3 +149,9 @@ fieldset {
 .chartTxt {
   margin-top: 1rem;
 }
+
+#continueBtn {
+  width: 7rem;
+  height: 3rem;
+  margin-top: 1rem;
+}

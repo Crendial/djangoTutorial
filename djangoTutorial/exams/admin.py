@@ -1,9 +1,11 @@
+import re
+
 from django.contrib import admin
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import path, reverse
 from django.utils.html import format_html
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from nested_admin import NestedTabularInline, NestedModelAdmin
 from nested_admin.formsets import NestedInlineFormSet
 
@@ -55,7 +57,13 @@ class ExamAdmin(NestedModelAdmin):
     inlines = [MchoiceInline]
 
     search_fields = ["exam_text"]
-    list_display = ["exam_text", "pub_date", "was_published_recently", "show_qr_code"]
+    list_display = [
+        "exam_text",
+        "pub_date",
+        "was_published_recently",
+        "show_qr_code",
+        "show_scores",
+    ]
     list_filter = ["pub_date"]
 
     @admin.display(description="QR code")
@@ -68,12 +76,22 @@ class ExamAdmin(NestedModelAdmin):
             url,
         )
 
+    @admin.display(description="Student scores")
+    def show_scores(self, obj):
+        url = reverse("admin:exams_exam_scores", args=(obj.pk,))
+        return format_html('<a class="button" href="{}">Scores</a>', url)
+
     def get_urls(self):
         custom = [
             path(
                 "<int:pk>/qr/",
                 self.admin_site.admin_view(self.qr_view),
                 name="exams_exam_qr",
+            ),
+            path(
+                "<int:pk>/scores/",
+                self.admin_site.admin_view(self.scores_view),
+                name="exams_exam_scores",
             ),
         ]
         return custom + super().get_urls()
@@ -84,6 +102,24 @@ class ExamAdmin(NestedModelAdmin):
         return TemplateResponse(
             request, "admin/exams/exam/qr.html", {"exam": exam, "url": url}
         )
+
+    def scores_view(self, request, pk):
+        exam = get_object_or_404(Exam, pk=pk)
+        if not self.has_view_permission(request, exam):
+            raise PermissionDenied
+        attempts = (
+            Attempt.objects.filter(exam=exam)
+            .select_related("student")
+            .order_by("-score", "created")
+        )
+        context = {
+            **self.admin_site.each_context(request),
+            "title": f"Scores: {exam.exam_text}",
+            "opts": self.model._meta,
+            "exam": exam,
+            "attempts": attempts,
+        }
+        return TemplateResponse(request, "admin/exams/exam/scores.html", context)
 
 
 admin.site.register(Exam, ExamAdmin)

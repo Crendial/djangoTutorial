@@ -26,15 +26,6 @@ class Exam(models.Model):
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
-    def clean(self):
-        super().clean()
-        if self.pk:
-            for m in self.multiplechoice_set.prefetch_related("choice_set"):
-                if sum(c.correct for c in m.choice_set.all()) != 1:
-                    raise ValidationError(
-                        f'Question "{m.mchoice_text}" must have exactly 1 correct answer.'
-                    )
-
 
 class MultipleChoice(models.Model):
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)

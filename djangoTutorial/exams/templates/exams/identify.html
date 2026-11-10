@@ -9,8 +9,12 @@
   </head>
   <form method="post">
     {% csrf_token %}
-    <input type="hidden" name="next" value="{{ next }}">
-    {{ form.as_p }}
-    <button type="submit">Continue</button>
+    <div class="Container">
+      <div class="pollBox">
+        <input type="hidden" name="next" value="{{ next }}" width="80%">
+        {{ form.as_p }}
+        <button type="submit" id="continueBtn">Continue</button>
+      </div>
+    </div>
   </form>
 </html>
