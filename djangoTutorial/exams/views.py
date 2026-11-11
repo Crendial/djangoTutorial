@@ -1,4 +1,5 @@
 import uuid
+import json
 from functools import wraps
 from urllib.parse import urlencode
 
@@ -136,11 +137,15 @@ def vote(request, exam_id):
     Check choices and validate before touching database.
     """
     choices = []
+    answersDict = {}
     for mchoice in exam.multiplechoice_set.all():
         try:
             choices.append(
                 mchoice.choice_set.get(pk=request.POST.get(f"choice{mchoice.id}"))
             )
+            for choice in choices:
+                answersDict[mchoice.mchoice_text] = choice.choice_text, choice.correct, 
+
         except (Choice.DoesNotExist, ValueError):
             messages.error(request, f"Please answer: {mchoice.mchoice_text}")
             return redirect("exams:detail", exam_id)
@@ -150,11 +155,14 @@ def vote(request, exam_id):
     try:
         with transaction.atomic():
             Attempt.objects.create(
-                student=request.student, exam=exam, score=score, total=len(choices)
+                student=request.student, exam=exam, score=score, total=len(choices), answers=answersDict, 
             )
+            
             Choice.objects.filter(pk__in=[c.pk for c in choices]).update(
                 answered=F("answered") + 1
             )
+
+            
     except IntegrityError:
         messages.info(request, "You've already taken this exam")
 

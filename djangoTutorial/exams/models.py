@@ -62,6 +62,7 @@ class Attempt(models.Model):
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     score = models.PositiveBigIntegerField()
     total = models.PositiveIntegerField()
+    answers = models.JSONField(default=dict, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:

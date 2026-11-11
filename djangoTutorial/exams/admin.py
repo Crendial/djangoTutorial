@@ -1,10 +1,10 @@
-import re
+import json
 
 from django.contrib import admin
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import path, reverse
-from django.utils.html import format_html
+from django.utils.html import format_html, format_html_join
 from django.core.exceptions import ValidationError, PermissionDenied
 from nested_admin import NestedTabularInline, NestedModelAdmin
 from nested_admin.formsets import NestedInlineFormSet
@@ -121,7 +121,34 @@ class ExamAdmin(NestedModelAdmin):
         }
         return TemplateResponse(request, "admin/exams/exam/scores.html", context)
 
+class AttemptAdmin(admin.ModelAdmin):
+    class Media:
+        css = {"all": ("polls/admin_fix.css",)}
+   
+    fields = ("student", "exam", "score", "total", "formatted_answers")
+    readonly_fields = ("student", "exam", "score", "total", "formatted_answers")
+
+    @admin.display(description="Student answers")
+    def formatted_answers(self, obj):
+        if not obj or not obj.answers:
+            return "-"
+
+        rows = format_html_join(
+            "",
+            "<tr><td>{}</td><td>{}</td><td>{}</td></tr>",
+            (
+                (question, answer, "✔ Correct" if correct else "✘ Wrong")
+                for question, (answer, correct) in obj.answers.items()
+            ),
+        )
+        return format_html(
+            "<table>"
+            "<thead><tr><th>Question</th><th>Answer</th><th>Result</th></tr></thead>"
+            "<tbody>{}</tbody>"
+            "</table>",
+            rows,
+        )
 
 admin.site.register(Exam, ExamAdmin)
 admin.site.register(Student)
-admin.site.register(Attempt)
+admin.site.register(Attempt, AttemptAdmin)
