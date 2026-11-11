@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@tailwindcss/cli": "^4.3.5",
+    "tailwindcss": "^4.3.5"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true
+  }
+}
