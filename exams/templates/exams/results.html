@@ -1,58 +1,76 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="fi">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Exam results</title>
-        <link rel="stylesheet" href="{% static 'exams/tailwinded.css' %}">
-    </head>
-    <div class="resultContainer">
-      <h1>{{ exam.exam_text }}</h1>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Exam results</title>
+    <link rel="stylesheet" href="{% static 'exams/tailwinded.css' %}">
+  </head>
+  <body class="min-h-screen bg-gray-900 text-gray-100">
+    <header class="bg-gray-950 border-b-4 border-purple-500">
+      <div class="mx-auto max-w-5xl px-4 py-6">
+        <h1 class="text-3xl font-bold tracking-tight text-white truncate">{{ exam.exam_text }}</h1>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-5xl px-4 py-10">
       {% if messages %}
-        <ul class="messages">
+        <ul class="mb-6 rounded-lg border border-purple-500/50 bg-purple-900/20 px-4 py-3 text-sm text-purple-200">
           {% for message in messages %}
-            <li class="{{ message.tags }}">{{ message }}</li>
+            <li>{{ message }}</li>
           {% endfor %}
         </ul>
       {% endif %}
+
       {% if attempt %}
-        <h2>{{ request.student.name }}, you scored {{ attempt.score }}/{{ attempt.total }}</h2>
-        {% for mchoice in exam.multiplechoice_set.all %}
-          <h2 class="chartTxt">{{ mchoice.mchoice_text }}</h2>
-          <canvas id="myChart{{ forloop.counter0 }}" style="max-width: 400px; margin: 0 auto;"></canvas>  
-        {% endfor %}
+        <h2 class="mb-8 text-2xl font-semibold text-white text-wrap wrap-anywhere">
+          {{ request.student.name }}, you scored
+          <span class="text-purple-400">{{ attempt.score }}/{{ attempt.total }}</span>
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {% for mchoice in exam.multiplechoice_set.all %}
+            <div class="bg-gray-800 border border-gray-700 rounded-xl p-5">
+              <h3 class="mb-4 text-lg font-semibold text-white truncate">{{ mchoice.mchoice_text }}</h3>
+              <canvas id="myChart{{ forloop.counter0 }}" class="mx-auto max-w-xs"></canvas>
+            </div>
+          {% endfor %}
+        </div>
       {% endif %}
 
-      <a id="backToPolls" href="{% url 'exams:index' %}">Back to looking at exams?</a>
-    </div>
+      <a id="backToPolls" href="{% url 'exams:index' %}"
+         class="mt-10 inline-block rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white
+                hover:bg-purple-500 transition">
+        Back to looking at exams?
+      </a>
+    </main>
 
-    {{ charts|json_script:"charts-data" }}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-    const charts = JSON.parse(document.getElementById("charts-data").textContent);
-    charts.forEach((c, i) => {
-      new Chart(document.getElementById(`myChart${i}`), {
-        type: 'pie',
-        data: {
-          labels: c.labels,
-          datasets: [{
-            label: '# of votes',
-            data: c.votes,
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top',
-              labels: { color: 'white' }
-            },
-            title: { display: false }
+    {% if attempt %}
+      {{ charts|json_script:"charts-data" }}
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script>
+      const charts = JSON.parse(document.getElementById("charts-data").textContent);
+      charts.forEach((c, i) => {
+        new Chart(document.getElementById(`myChart${i}`), {
+          type: 'pie',
+          data: {
+            labels: c.labels,
+            datasets: [{
+              label: '# of votes',
+              data: c.votes,
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: 'top', labels: { color: 'white' } },
+              title: { display: false }
+            }
           }
-        }
+        });
       });
-    });
-    </script>
-</html>
+      </script>
+    {% endif %}
+  </body>

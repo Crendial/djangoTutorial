@@ -4,7 +4,7 @@ from functools import wraps
 from urllib.parse import urlencode
 
 from django.db import IntegrityError, transaction
-from django.db.models import F
+from django.db.models import F, Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
 from django.views.decorators.http import require_POST, require_http_methods
@@ -71,9 +71,7 @@ class IndexView(generic.ListView):
         """
         Return the last five published exams (not including those set to be published in the future)
         """
-        return Exam.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[
-            :5
-        ]
+        return Exam.objects.annotate(question_count=Count("multiplechoice")).order_by("-pub_date")[:5]
 
 
 @method_decorator(student_required, name="dispatch")
