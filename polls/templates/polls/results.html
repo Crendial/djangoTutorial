@@ -1,20 +1,43 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="fi">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Poll results</title>
-        <link rel="stylesheet" href="{% static 'polls/style.css' %}">
-    </head>
-    <div class="resultContainer">
-      <h1>{{ poll.poll_text }}</h1>
-      {% for chart in charts %}
-        <h2>{{ chart.question }}</h2>
-        <canvas id="myChart{{ forloop.counter0 }}" style="max-width: 400px; margin: 0 auto;"></canvas>
-      {% endfor %}
-      <a id="backToPolls" href="{% url 'polls:index' %}">Back to looking at polls?</a>
-    </div>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Poll results</title>
+      <link rel="stylesheet" href="{% static 'polls/tailwinded.css' %}">
+  </head>
+  <body class="min-h-screen bg-gray-900 text-gray-100">
+    <header class="bg-gray-950 border-b-3 border-purple-500">
+      <div class="mx-auto max-w-5xl px-4 py-6">
+        <h1 class="text-3xl font-bold tracking-tight text-white truncate">{{ poll.poll_text }}</h1>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-5xl px-4 py-10">
+      {% if messages %}
+        <ul class="mb-6 rounded-lg border border-purple-500/50 bg-purple-900/20 px-4 py-3 text-sm text-purple-200">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {% for chart in charts %}
+          <div class="bg-gray-800 border-gray-700 rounded-xl p-5">
+            <h3 class="mb-4 text-lg font-semibold text-white truncate">{{ chart.question }}</h3>
+            <canvas id="myChart{{ forloop.counter0 }}" class="mx-auto max-w-xs"></canvas>
+          </div>
+        {% endfor %}
+      </div>
+
+      <a id="backToPolls" href="{% url 'polls:index' %}"
+         class="mt-10 inline-block rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white
+                hover:bg-purple-500 transition">
+        Back to looking at polls?
+      </a>
+    </main>
 
     {{ charts|json_script:"charts-data" }}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -44,4 +67,5 @@
       });
     });
     </script>
+  </body>
 </html>

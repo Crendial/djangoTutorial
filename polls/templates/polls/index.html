@@ -1,21 +1,42 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="fi">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Polling app</title>
-        <link rel="stylesheet" href="{% static 'polls/style.css' %}">
-    </head>
-    <div class="container">
-        {% if latest_poll_list %}
-            {% for poll in latest_poll_list %}
-                <div class="pollBox">
-                    <a href="{% url 'polls:detail' poll.id %}">{{ poll.poll_text }}</a>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No polls are available.</p>
-        {% endif %}
-    </div>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Polling app</title>
+    <link rel="stylesheet" href="{% static 'polls/tailwinded.css' %}">
+  </head>
+  <body class="min-h-screen bg-gray-900 text-gray-100">
+    <header class="bg-gray-950 border-b-3 border-purple-500">
+      <div class="mx-auto max-w-5xl px-4 py-6">
+        <h1 class="text-3xl font-bold tracking-tight text-white">Polling app</h1>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-5xl px-4 py-10">
+      {% if latest_poll_list %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {% for poll in latest_poll_list %}
+            <div class="flex flex-col justify-between bg-gray-800 rounded-xl border border-gray-700 p-5
+                        hover:border-purple-500 hover:shadow-lg hover:shadow-purple-900/30 transition">
+              <div>
+                <h2 class="text-lg font-semibold text-white overflow-hidden text-ellipsis">{{ poll.poll_text }}</h2>
+                <p class="mt-1 text-sm text-gray-400">
+                  {{ poll.question_count }} question{{ exam.question_count|pluralize }}
+                </p>
+              </div>
+              <a href="{% url 'polls:detail' poll.id %}"
+                 class="mt-6 inline-block text-center rounded-lg bg-purple-600 px-4 py-6
+                        text-sm font-medium text-white hover:bg-purple-500 transition">
+                Start
+              </a>
+            </div>
+        {% endfor %}
+        </div>
+      {% else %}
+        <p>No polls are available.</p>
+      {% endif %}
+    </main>
+  </body>
 </html>

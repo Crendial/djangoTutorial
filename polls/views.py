@@ -1,7 +1,7 @@
 import uuid
 
 from django.db import IntegrityError, transaction
-from django.db.models import F
+from django.db.models import F, Count
 from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 from django.views.decorators.http import require_POST
@@ -19,9 +19,7 @@ class IndexView(generic.ListView):
         """
         Return the last five published polls (not including those set to be published in the future)
         """
-        return Poll.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[
-            :5
-        ]
+        return Poll.objects.annotate(question_count=Count("question")).order_by("-pub_date")[:5]
 
 
 class DetailView(generic.DetailView):
