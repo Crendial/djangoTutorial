@@ -4,7 +4,7 @@ from functools import wraps
 from urllib.parse import urlencode
 
 from django.db import IntegrityError, transaction
-from django.db.models import F, Count
+from django.db.models import F, Count, Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
 from django.views.decorators.http import require_POST, require_http_methods
@@ -71,8 +71,14 @@ class IndexView(generic.ListView):
         """
         Return the last five published exams (not including those set to be published in the future)
         """
-        return Exam.objects.annotate(question_count=Count("multiplechoice")).order_by("-pub_date")[:5]
-
+        now = timezone.now()
+        return(
+        Exam.objects
+        .filter(pub_date__lte=now)
+        .filter(Q(end_date__isnull=True) | Q(end_date__gte=now))
+        .annotate(question_count=Count("multiplechoice"))
+        .order_by("-pub_date")[:5]
+    )
 
 @method_decorator(student_required, name="dispatch")
 class DetailView(generic.DetailView):
@@ -90,34 +96,53 @@ class DetailView(generic.DetailView):
         """
         Excludes exams not published yet
         """
-        return Exam.objects.filter(pub_date__lte=timezone.now())
+        now = timezone.now()
+        return(
+            Exam.objects
+            .filter(pub_date__lte=now)
+            .filter(Q(end_date__isnull=True) | Q(end_date__gte=now))
+        )
 
 
 @method_decorator(student_required, name="dispatch")
 class ResultsView(generic.DetailView):
     model = Exam
     template_name = "exams/results.html"
-
+    
     def get_queryset(self):
         """
-        Excludes exams not published yet (mentioned in the tutorial with no example, doing it here cus I probably should.)
+        Excludes exams not published yet
         """
-        return Exam.objects.filter(pub_date__lte=timezone.now())
+        now = timezone.now()
+        return(
+            Exam.objects
+            .filter(pub_date__lte=now)
+            .filter(Q(end_date__isnull=True) | Q(end_date__gte=now))
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         mchoices = self.object.multiplechoice_set.prefetch_related("choice_set")
-        context["attempt"] = Attempt.objects.filter(
+        attempt = Attempt.objects.filter(
             student=self.request.student, exam=self.object
         ).first()
-        context["charts"] = [
-            {
+        answers = (attempt.answers if attempt else None) or {}
+
+        charts = []
+        for m in mchoices:
+            entry = answers.get(m.mchoice_text)
+            choices = list(m.choice_set.all())
+            charts.append({
                 "mchoice": m.mchoice_text,
-                "labels": [c.choice_text for c in m.choice_set.all()],
-                "votes": [c.answered for c in m.choice_set.all()],
-            }
-            for m in mchoices
-        ]
+                "labels": [c.choice_text for c in choices],
+                "votes": [c.answered for c in choices],
+                "answered": entry is not None,
+                "chosen": entry[0] if entry else None,
+                "correct": entry[1] if entry else None,
+            })
+
+        context["attempt"] = attempt
+        context["charts"] = charts
         return context
 
 
@@ -150,18 +175,21 @@ def vote(request, exam_id):
 
     score = sum(1 for c in choices if c.correct)
 
-    try:
-        with transaction.atomic():
-            Attempt.objects.create(
-                student=request.student, exam=exam, score=score, total=len(choices), answers=answersDict, 
-            )
-            
-            Choice.objects.filter(pk__in=[c.pk for c in choices]).update(
-                answered=F("answered") + 1
-            )
-
-            
-    except IntegrityError:
-        messages.info(request, "You've already taken this exam")
+    if timezone.now() <= exam.end_date:
+        try:
+            with transaction.atomic():
+                Attempt.objects.create(
+                    student=request.student, exam=exam, score=score, total=len(choices), answers=answersDict, 
+                )
+                
+                Choice.objects.filter(pk__in=[c.pk for c in choices]).update(
+                    answered=F("answered") + 1
+                )
+    
+        except IntegrityError:
+            messages.info(request, "You've already taken this exam")
+    else:
+        messages.info(request, "Exam is already over")
+        return redirect("exams:index")
 
     return redirect("exams:results", exam_id)

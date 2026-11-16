@@ -8,7 +8,7 @@
     <tbody>
       {% for a in attempts %}
         <tr>
-          <td>{{ a.student.name }}</td>
+          <td><a href={% url 'admin:exams_attempt_change' a.id %}> {{ a.student.name }} </a></td>
           <td>{{ a.score }}/{{ a.total }}</td>
           <td>{% widthratio a.score a.total 100 %}%</td>
           <td>{{ a.created|date:"Y-m-d H:i" }}</td>

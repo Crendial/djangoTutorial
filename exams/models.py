@@ -12,7 +12,8 @@ from django.db.models.functions import Lower
 
 class Exam(models.Model):
     exam_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField("date publisehed")
+    pub_date = models.DateTimeField("date publisehed", default=timezone.now())
+    end_date = models.DateTimeField("Ending time", default=timezone.now() + datetime.timedelta(days=1))
 
     def __str__(self):
         return self.exam_text
@@ -22,10 +23,20 @@ class Exam(models.Model):
         ordering="pub_date",
         description="Published recently?",
     )
+
     def was_published_recently(self):
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
+    @admin.display(
+        boolean=True,
+        ordering="pub_date",
+        description="Past deadline?",
+    )
+
+    def past_deadline(self):
+        now = timezone.now()
+        return now >= self.end_date
 
 class MultipleChoice(models.Model):
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
@@ -56,7 +67,6 @@ class Student(models.Model):
     def __str__(self):
         return self.name
 
-
 class Attempt(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
@@ -69,3 +79,7 @@ class Attempt(models.Model):
         constraints = [
             UniqueConstraint(fields=["student", "exam"], name="one_attempt_per_student")
         ]
+
+    def __str__(self) -> str:
+        name = f"{self.student}: {self.exam}"
+        return name

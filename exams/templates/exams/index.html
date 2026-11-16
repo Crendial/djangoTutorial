@@ -15,6 +15,11 @@
     </header>
 
     <main class="mx-auto max-w-5xl px-4 py-10">
+      {% if messages %}
+       <ul class="rounded-lg border border-red-500/50 bg-red-900/20 px-4 py-3 text-sm text-red-300 mb-2">
+        {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+       </ul>
+      {% endif %}
       {% if latest_exam_list %}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {% for exam in latest_exam_list %}
@@ -25,6 +30,8 @@
                 <p class="mt-1 text-sm text-gray-400">
                   {{ exam.question_count }} question{{ exam.question_count|pluralize }}
                 </p>
+                <p class="mt-1 text-sm text-gray-400">Published at: {{exam.pub_date}}</p>
+                <p class="mt-1 text-sm text-gray-400">Ends at: {{ exam.end_date }}</p>
               </div>
               <a href="{% url 'exams:detail' exam.id %}"
                   class="mt-6 inline-block text-center rounded-lg bg-purple-600 px-4 py-2

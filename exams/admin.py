@@ -52,7 +52,7 @@ class ExamAdmin(NestedModelAdmin):
 
     fieldsets = [
         (None, {"fields": ["exam_text"]}),
-        ("Date information", {"fields": ["pub_date"], "classes": ["collapse"]}),
+        ("Date information", {"fields": ["pub_date", "end_date"], "classes": ["collapse"]}),
     ]
     inlines = [MchoiceInline]
 
@@ -61,6 +61,7 @@ class ExamAdmin(NestedModelAdmin):
         "exam_text",
         "pub_date",
         "was_published_recently",
+        "past_deadline",
         "show_qr_code",
         "show_scores",
     ]
