@@ -15,7 +15,7 @@
       </div>
     </header>
 
-    <main class="mx-auto max-w-3xl px-4 py-10">
+    <main class="mx-auto max-w-3xl px-4 py-4">
       <form action="{% url 'exams:vote' exam.id %}" method="post" class="space-y-6">
         {% csrf_token %}
 
@@ -25,7 +25,7 @@
           </ul>
         {% endif %}
 
-        <p class="text-sm text-gray-400 mt-1">Exam ends at: {{ exam.end_date }}</p>
+        <p class="text-sm text-gray-400">Exam ends at: {{ exam.end_date }}</p>
         {% for mchoice in exam.multiplechoice_set.all %}
           <fieldset class="bg-gray-800 border border-gray-700 rounded-xl p-5">
             <legend class="px-2 text-lg font-semibold text-white text-wrap wrap-anywhere">{{ mchoice.mchoice_text }}</legend>

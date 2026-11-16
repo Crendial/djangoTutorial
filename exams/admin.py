@@ -40,8 +40,8 @@ class ChoiceInline(NestedTabularInline):
 
 class MchoiceInline(NestedTabularInline):
     model = MultipleChoice
-    extra = 1
     min_num = 1
+    extra = 0
     validate_min = True
     inlines = [ChoiceInline]
 
@@ -52,7 +52,7 @@ class ExamAdmin(NestedModelAdmin):
 
     fieldsets = [
         (None, {"fields": ["exam_text"]}),
-        ("Date information", {"fields": ["pub_date", "end_date"], "classes": ["collapse"]}),
+        ("Date information", {"fields": ["pub_date", "end_date"],}),
     ]
     inlines = [MchoiceInline]
 
