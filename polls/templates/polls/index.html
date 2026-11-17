@@ -25,6 +25,7 @@
                 <p class="mt-1 text-sm text-gray-400">
                   {{ poll.question_count }} question{{ exam.question_count|pluralize }}
                 </p>
+                <p class="mt-1 text-sm text-gray-400">Published at: {{ poll.pub_date }}</p>
               </div>
               <a href="{% url 'polls:detail' poll.id %}"
                  class="mt-6 inline-block text-center rounded-lg bg-purple-600 px-4 py-6
