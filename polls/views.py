@@ -17,14 +17,14 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """
-        Return the last five published polls (not including those set to be published in the future)
+        Return the last six published polls (not including those set to be published in the future)
         """
         now = timezone.now()
         return(
-            Exam.objects
+            Poll.objects
             .filter(pub_date__lte=now)
             .annotate(question_count=Count("multiplechoice"))
-            .order_by("-pub_date")[:5]
+            .order_by("-pub_date")[:6]
         )
 
 

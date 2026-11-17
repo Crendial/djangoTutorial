@@ -69,7 +69,7 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """
-        Return the last five published exams (not including those set to be published in the future)
+        Return the last six published exams (not including those set to be published in the future)
         """
         now = timezone.now()
         return(
@@ -77,7 +77,7 @@ class IndexView(generic.ListView):
         .filter(pub_date__lte=now)
         .filter(Q(end_date__isnull=True) | Q(end_date__gte=now))
         .annotate(question_count=Count("multiplechoice"))
-        .order_by("-pub_date")[:5]
+        .order_by("-pub_date")[:6]
     )
 
 @method_decorator(student_required, name="dispatch")
