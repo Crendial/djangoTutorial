@@ -151,5 +151,4 @@ class AttemptAdmin(admin.ModelAdmin):
         )
 
 admin.site.register(Exam, ExamAdmin)
-admin.site.register(Student)
 admin.site.register(Attempt, AttemptAdmin)
