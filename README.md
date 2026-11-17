@@ -55,3 +55,17 @@ Key differences:
 - Exams instead of polls, the questions inside have a single correct answer.
 - Exams have deadlines. After the deadline the exam becomes unanswerable and inaccessible.
 - Admin page has better tools to view the data.
+
+## Example use cases:
+### Case 1:
+You're curious on what the knowledge level of the general public is in certain topics. Sure the polling app could be used for this but the feedback is worse and the data is barely collected in comparison. So you decide to deploy the exam app instead.
+In a similar fashion to the polling site, you go to {your site url}/admin to create some quick exams:
+
+![Image showing exam creation UI](mdImages/examCreate.png)
+
+Very similar to the poll creation UI showcased above, to access it, click the add button next to exam. The main difference here is the addition of correct answers and end dates. The end date determines when the exam cannot be accessed or answered anymore, by default it's 1 day after the opening of the creation form. Each multiple choice question has to have 1 correct answer, no more, no less. The front page limit of 6 applies here too. Though with additional filtering. Not only are future exams inaccessible, but also exams that are past their end date.
+
+### To users it would look like so:
+The front page:
+
+
