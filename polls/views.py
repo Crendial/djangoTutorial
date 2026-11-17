@@ -19,7 +19,13 @@ class IndexView(generic.ListView):
         """
         Return the last five published polls (not including those set to be published in the future)
         """
-        return Poll.objects.annotate(question_count=Count("question")).order_by("-pub_date")[:5]
+        now = timezone.now()
+        return(
+            Exam.objects
+            .filter(pub_date__lte=now)
+            .annotate(question_count=Count("multiplechoice"))
+            .order_by("-pub_date")[:5]
+        )
 
 
 class DetailView(generic.DetailView):
