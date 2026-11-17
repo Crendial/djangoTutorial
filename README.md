@@ -68,4 +68,29 @@ Very similar to the poll creation UI showcased above, to access it, click the ad
 ### To users it would look like so:
 The front page:
 
+![Image of exam site index page with 6 exams](mdImages/examIndex.png)
 
+As we can see, remarkably similar, except the end_date is shown already. This matters so that if someone visits the page, they avoid being disappointed by the exam becoming unanswerable while they are doing it.
+User chooses an exam they want to attempt but they have not yet tried an exam, so they must identify with a username (must be unique):
+
+![Image of identification page](mdImages/examIdentify.png)
+
+This is the first completely unique part of the exam version of the app. In the polling app, your cookie is silently given to you with the polls you've answered attached. In the exam app it's tied to a student model which has a name (given in the identification page). This is so someones answers can be traced across multiple exams (for example in a school setting).
+
+After giving yourself a name, you're redirected to the exam you actually chose:
+
+![Image of the detail/attempt view of an exam](mdImages/examDetail.png)
+
+This page is practically identical to the one in the polling app, except for the fact that there is an end date visible. For the same reason as the index page having it.
+The user answers the questions to the best of their ability (in this case options 1, 3 and 3):
+
+![Image of the result view of an exam](mdImages/examResults.png)
+
+Once again pie charts with the chosen answers appear, but this time the users score is displayed first so that they knew how well they did alongside the pie charts showing what they chose and if the specific answer was correct or not. Pretty neat, right?
+
+### Back to the admin (you):
+
+Now we have had John Student not only register but answer an exam. What can you see?
+Well you may have noticed earlier but this app has more models accessible by the admin: Exam, Student and Attempt. Let's start by looking at Students.
+
+![Close up image of the apps models](mdImages/examModelsCloseup.png)
