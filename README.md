@@ -93,7 +93,7 @@ Once again pie charts with the chosen answers appear, but this time the users sc
 Now we have had John Student not only register but answer an exam. What can you see?
 Well you may have noticed earlier but this app has an extra model to view, that being the attempt. I'll get into that later since we're doing exam first:
 
-![Image of exam models admin view](mdImages/examAdminExam)
+![Image of exam models admin view](mdImages/examAdminExam.png)
 
 We can see the usual suspects, name of the exam and publishing date. Also a few checks (for front page filtering) like is the exam considered recent or is it past it's deadline.
 There is also the QR code view which I'll mention more of in use case 2 and the score view. The score view is what I want to highlight since that was not in the polling version of the app. Let's look at the scores for the IT exam we just had John Student take:
