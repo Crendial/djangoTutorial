@@ -91,6 +91,30 @@ Once again pie charts with the chosen answers appear, but this time the users sc
 ### Back to the admin (you):
 
 Now we have had John Student not only register but answer an exam. What can you see?
-Well you may have noticed earlier but this app has more models accessible by the admin: Exam, Student and Attempt. Let's start by looking at Students.
+Well you may have noticed earlier but this app has an extra model to view, that being the attempt. I'll get into that later since we're doing exam first:
 
-![Close up image of the apps models](mdImages/examModelsCloseup.png)
+![Image of exam models admin view](mdImages/examAdminExam)
+
+We can see the usual suspects, name of the exam and publishing date. Also a few checks (for front page filtering) like is the exam considered recent or is it past it's deadline.
+There is also the QR code view which I'll mention more of in use case 2 and the score view. The score view is what I want to highlight since that was not in the polling version of the app. Let's look at the scores for the IT exam we just had John Student take:
+
+![Image of John Students score](mdImages/examScores.png)
+
+From here we can see everyone who has taken the specific exam, what score they got (both score and %) and when they took it.
+You can also see that the students name is a link. It goes to the linked attempt models admin page which we'll look at next:
+
+![Image of John Students attempt of the IT exam](mdImages/examAttempt.png)
+
+Here we can see some of the same info as before (name, score, link to exam) but the new thing here is the chart at the bottom. It shows what specific questions the student got right and which ones they got wrong. 
+That concludes basic overview of the exam side and use case 1.
+
+### Case 2:
+You're a teacher and want to give your students a quick surprise quiz on recent material. You don't want to go print out anything or show the questions on the board as if we went back a few decades, so you use the exam app.
+
+You create an exam similarly to case 1, maybe set the deadline shorter, you go to the admin view and click the show QR code button:
+
+![Image of exam QR code](mdImages/examQR.png)
+
+You get a QR code you can share to the students that redirects directly to the exam and makes them identify if they haven't (refer to case 1).
+You get to see all the results and know what the students might need to study up on (refer to case 1 again).
+Neat!
