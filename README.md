@@ -45,3 +45,13 @@ Go to the polls section of admin (not the add button this time), you see next to
 You click it and a QR code pop-up shows up that you can show to anyone in the room:
 
 ![Image of QR code pop-up](mdImages/pollQR.png)
+
+The QR code redirects to the same view as the user in case 1 after choosing a poll of their choice the rest follows normally.
+
+# Exam app
+## What is it:
+The above showcased polling app used as the core.
+Key differences:
+- Exams instead of polls, the questions inside have a single correct answer.
+- Exams have deadlines. After the deadline the exam becomes unanswerable and inaccessible.
+- Admin page has better tools to view the data.
