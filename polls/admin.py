@@ -30,7 +30,7 @@ class PollAdmin(NestedModelAdmin):
 
     fieldsets = [
         (None, {"fields": ["poll_text"]}),
-        ("Date information", {"fields": ["pub_date"], "classes": ["collapse"]}),
+        ("Date information", {"fields": ["pub_date"]}),
     ]
     inlines = [QuestionInline]
 
