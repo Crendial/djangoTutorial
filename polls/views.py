@@ -23,7 +23,7 @@ class IndexView(generic.ListView):
         return(
             Poll.objects
             .filter(pub_date__lte=now)
-            .annotate(question_count=Count("multiplechoice"))
+            .annotate(question_count=Count("question"))
             .order_by("-pub_date")[:6]
         )
 
