@@ -18,7 +18,7 @@ class ChoiceInline(NestedTabularInline):
 
 class QuestionInline(NestedTabularInline):
     model = Question
-    extra = 1
+    extra = 0
     min_num = 1
     validate_min = True
     inlines = [ChoiceInline]
