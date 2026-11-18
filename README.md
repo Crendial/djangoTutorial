@@ -26,11 +26,11 @@ User picks an available option of their choice and is greeted with the following
 
 ![Image of poll detail/voting view](mdImages/pollDetail.png)
 
-User votes on all available polling questions (in this case why not both and bats respectively) and reaches the results page:
+User votes on all available polling question and reaches the results page:
 
 ![Image of poll results view with pie charts](mdImages/pollResults.png)
 
-The user then sees pie charts of the resulting polls (in this case with 1 color since they're the first to vote) and is allowed to return to the front page once more.
+The user then sees pie charts of the resulting polls and is allowed to return to the front page once more.
 
 ### Case 2:
 You are holding a meeting or presentation, maybe teaching a class.
@@ -82,7 +82,7 @@ After giving yourself a name, you're redirected to the exam you actually chose:
 ![Image of the detail/attempt view of an exam](mdImages/examDetail.png)
 
 This page is practically identical to the one in the polling app, except for the fact that there is an end date visible. For the same reason as the index page having it.
-The user answers the questions to the best of their ability (in this case options 1, 3 and 3):
+The user answers the questions to the best of their ability:
 
 ![Image of the result view of an exam](mdImages/examResults.png)
 
